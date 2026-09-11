@@ -1,20 +1,10 @@
 # K4 — Ngày 1: Bài Tập & Phản Ánh
 ## Khám Phá LLM API | Phiếu Thực Hành
 
-**Thời lượng:** 4 tiếng
-**Cách làm:** Trả lời từng câu ngay sau khi hoàn thành block tương ứng —
-đừng để dồn hết về cuối buổi. Thay dòng `*Câu trả lời của bạn*` bằng câu
-trả lời thật (chấm tự động sẽ đếm số câu đã trả lời).
-
----
-
-## Block 1 — API Cơ Bản (trả lời sau Checkpoint 1)
+## Block 1 — API Cơ Bản
 
 ### Câu 1.1 — Độ nhạy của temperature
-Gọi `call_openai` với temperature 0.0, 0.5, 1.0 và 1.5 dùng prompt
-**"Hãy kể cho tôi một sự thật thú vị về Việt Nam."**
 
-**Bạn nhận thấy quy luật gì qua bốn phản hồi?** (2–3 câu)
 Trong lần chạy này, temperature 0.0, 0.5 và 1.0 đều trả lời về hang Sơn Đoòng,
 với cách diễn đạt khá giống nhau; ở 1.5, model chuyển sang một sự thật về cà
 phê Việt Nam. Như vậy temperature cao làm lựa chọn nội dung đa dạng hơn, nhưng
@@ -22,18 +12,14 @@ phê Việt Nam. Như vậy temperature cao làm lựa chọn nội dung đa d�
 vì còn phụ thuộc vào mạng và tải API.
 
 ### Câu 1.2 — Chọn temperature cho sản phẩm
-**Bạn sẽ đặt temperature bao nhiêu cho chatbot hỗ trợ khách hàng, và tại sao?**
+
 Em sẽ bắt đầu với temperature khoảng 0.2–0.3. Chatbot hỗ trợ khách hàng cần
 trả lời nhất quán, chính xác và ít bịa thêm; mức thấp vẫn đủ linh hoạt để diễn
 đạt tự nhiên. Nếu sản phẩm có nhiều câu hỏi sáng tạo hơn, em sẽ thử nghiệm
 trên tập đánh giá trước khi tăng giá trị này.
 
 ### Câu 1.3 — Đánh đổi chi phí
-Kịch bản: 10.000 người dùng hoạt động mỗi ngày, mỗi người gọi API 3 lần,
-mỗi lần trung bình ~350 token đầu ra.
 
-**Ước tính GPT-4o đắt hơn GPT-4o-mini bao nhiêu lần cho workload này? Nêu một
-trường hợp GPT-4o xứng đáng với chi phí và một trường hợp nên dùng mini:**
 Với phần output của workload này, GPT-4o có giá 0.010 USD/1K token còn
 GPT-4o-mini là 0.0006 USD/1K token, nên GPT-4o đắt khoảng 16.7 lần. 10.000
 người dùng × 3 lần × 350 token là khoảng 10,5 triệu token output/ngày, tương
@@ -41,18 +27,10 @@ người dùng × 3 lần × 350 token là khoảng 10,5 triệu token output/ng
 GPT-4o đáng dùng cho phân tích phức tạp hoặc câu trả lời có rủi ro cao; mini
 phù hợp với FAQ, phân loại yêu cầu và các tác vụ lặp lại.
 
----
-
-## Block 2 — System Prompt & Token (trả lời sau Checkpoint 2)
+## Block 2 — System Prompt & Token
 
 ### Câu 2.1 — Sức mạnh của persona
-Gọi `chat_with_system_prompt` hai lần với cùng câu hỏi
-**"Giải thích blockchain là gì?"** nhưng hai system prompt khác nhau:
-- "Bạn là giáo viên tiểu học, giải thích thật đơn giản cho trẻ 8 tuổi."
-- "Bạn là chuyên gia tài chính, trả lời chuyên sâu bằng thuật ngữ kỹ thuật."
 
-**Hai phản hồi khác nhau như thế nào (độ dài, từ vựng, ví dụ)? System prompt
-ảnh hưởng đến hành vi model ra sao?** (3–4 câu)
 Trong lần chạy này, prompt dành cho trẻ 8 tuổi dùng ví dụ một cuốn sổ chung để
 ghi việc mượn đồ chơi, với từ vựng và câu giải thích đơn giản. Prompt dành cho
 chuyên gia tài chính tạo câu trả lời dài hơn, dùng các thuật ngữ như cấu trúc
@@ -60,11 +38,7 @@ dữ liệu phân tán, phi tập trung, hash và sự đồng thuận. System p
 đổi rõ đối tượng, mức chi tiết và cách chọn ví dụ dù câu hỏi người dùng không đổi.
 
 ### Câu 2.2 — tiktoken vs đếm từ
-Chọn một đoạn văn tiếng Việt ~100 từ. So sánh số token theo `count_tokens`
-(tiktoken) với ước lượng `số từ / 0.75` mà Part 1 đã dùng.
 
-**Hai con số chênh nhau bao nhiêu phần trăm? Vì sao tiếng Việt thường tốn
-nhiều token hơn tiếng Anh cùng độ dài?**
 Với đoạn tiếng Việt 107 từ em dùng, `count_tokens` theo encoding của gpt-4o
 cho 129 token, còn công thức `107 / 0.75` cho 142.67 token; công thức thô cao
 hơn thực tế 9.58%. Token là các mảnh subword chứ không phải từ; dấu tiếng Việt,
@@ -72,13 +46,10 @@ cách ghép âm tiết và độ phổ biến của từ ảnh hưởng đến c
 token có thể khác tiếng Anh cùng độ dài. Vì vậy `số từ / 0.75` chỉ nên dùng để
 ước lượng nhanh, không thay cho bộ mã hóa thật.
 
----
-
-## Block 3 — Streaming & Độ Bền (trả lời sau Checkpoint 3)
+## Block 3 — Streaming & Độ Bền
 
 ### Câu 3.1 — Trải nghiệm người dùng với streaming
-**Streaming quan trọng nhất trong trường hợp nào, và khi nào thì
-non-streaming lại phù hợp hơn?** (1 đoạn văn)
+
 Streaming quan trọng khi phản hồi có thể dài hoặc model cần vài giây để sinh
 xong, chẳng hạn chatbot, trợ lý viết và giao diện tương tác; người dùng thấy
 ứng dụng đã hoạt động ngay thay vì phải chờ toàn bộ câu trả lời. Non-streaming
@@ -87,9 +58,7 @@ liệu, kiểm tra toàn bộ nội dung trước khi hiển thị, hoặc khi p
 và việc quản lý stream không đem lại lợi ích đáng kể.
 
 ### Câu 3.2 — Vì sao backoff theo cấp số nhân?
-**So với delay cố định (ví dụ luôn chờ 1 giây), exponential backoff có lợi
-thế gì khi API bị quá tải? Điều gì xảy ra nếu hàng nghìn client cùng retry
-với delay cố định giống nhau?**
+
 Exponential backoff làm các client thất bại tạm thời giãn dần thời điểm retry,
 ví dụ 0.1, 0.2, 0.4 giây, nên server có thời gian phục hồi và hệ thống giảm
 traffic dồn thêm khi đang quá tải. Delay cố định khiến hàng nghìn client retry
@@ -97,14 +66,10 @@ traffic dồn thêm khi đang quá tải. Delay cố định khiến hàng nghì
 làm server nghẽn và có thể gây lỗi dây chuyền. Thực tế nên kết hợp thêm jitter
 ngẫu nhiên để các thời điểm retry không trùng nhau.
 
----
-
-## Block 4 — Mini-Project (trả lời sau Checkpoint 4)
+## Block 4 — Mini-Project
 
 ### Câu 4.1 — Thiết kế persona
-**Bạn chọn persona gì cho trợ lý của mình? Viết lại system prompt đó và giải
-thích 1–2 lựa chọn từ ngữ quan trọng trong prompt (ví dụ: vì sao yêu cầu
-"trả lời ngắn gọn", vì sao chỉ định ngôn ngữ...):**
+
 Persona em chọn là: “Bạn là trợ giảng thân thiện của khóa AI. Hãy giải thích
 rõ ràng, ngắn gọn bằng tiếng Việt, ưu tiên ví dụ thực tế và nói thẳng khi bạn
 không chắc chắn.” Cụm “ngắn gọn bằng tiếng Việt” giúp câu trả lời phù hợp với
@@ -113,21 +78,10 @@ thành thứ dễ áp dụng. Yêu cầu nói rõ khi không chắc chắn giúp
 chắc chắn giả khi model thiếu thông tin.
 
 ### Câu 4.2 — Hạn chế & cải thiện
-**Trợ lý của bạn hiện có hạn chế lớn nhất là gì (ví dụ: history chỉ 3 lượt,
-không có bộ nhớ dài hạn, không kiểm duyệt nội dung...)? Đề xuất một cải
-thiện cụ thể và mô tả ngắn cách triển khai:**
+
 Hạn chế lớn nhất là history chỉ giữ ba lượt, nên trợ lý có thể quên một quyết
 định hoặc định nghĩa đã nói ở lượt thứ tư trở về trước. Em sẽ cải thiện bằng
 cách tóm tắt các lượt cũ: trước khi cắt history, gửi phần hội thoại cũ cho một
 hàm tóm tắt, lưu bản tóm tắt cùng các thông tin quan trọng, rồi đưa bản tóm tắt
 vào system/context ở những lượt sau. Cách này giữ được ngữ cảnh dài hơn mà
 không làm số token input tăng tuyến tính theo toàn bộ lịch sử.
-
----
-
-## Danh Sách Kiểm Tra Nộp Bài
-
-- [ ] `python grade.py` — xem điểm tự động, mục tiêu ≥ 75/100
-- [ ] Cả 4 checkpoint pytest đều pass
-- [ ] Tất cả 9 câu trong file này đã được trả lời
-- [ ] Đã copy bài làm vào folder `solution/`, push lên fork và dán link trên trang bài Lab ở VLearn trước 23:59 ngày 11/09/2026
