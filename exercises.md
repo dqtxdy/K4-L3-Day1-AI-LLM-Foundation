@@ -17,16 +17,18 @@ Gọi `call_openai` với temperature 0.0, 0.5, 1.0 và 1.5 dùng prompt
 **Bạn nhận thấy quy luật gì qua bốn phản hồi?** (2–3 câu)
 Trong lần chạy này, temperature 0.0, 0.5 và 1.0 đều trả lời về hang Sơn Đoòng,
 với cách diễn đạt khá giống nhau; ở 1.5, model chuyển sang một sự thật về cà
-phê Việt Nam. Như vậy temperature cao làm lựa chọn nội dung đa dạng hơn, nhưng
-độ trễ 3.782s, 3.089s, 2.619s và 1.777s không cho thấy quy luật đáng tin cậy
-vì còn phụ thuộc vào mạng và tải API.
+phê Việt Nam. Kết quả này phù hợp với kỳ vọng rằng temperature cao có thể làm
+lựa chọn nội dung đa dạng hơn, nhưng một lần chạy ở mỗi mức chưa đủ để kết luận
+chắc chắn. Độ trễ 3.782s, 3.089s, 2.619s và 1.777s cũng không cho thấy quy luật
+đáng tin cậy vì còn phụ thuộc vào mạng và tải API.
 
 ### Câu 1.2 — Chọn temperature cho sản phẩm
 **Bạn sẽ đặt temperature bao nhiêu cho chatbot hỗ trợ khách hàng, và tại sao?**
-Em sẽ bắt đầu với temperature khoảng 0.2–0.3. Chatbot hỗ trợ khách hàng cần
-trả lời nhất quán, chính xác và ít bịa thêm; mức thấp vẫn đủ linh hoạt để diễn
-đạt tự nhiên. Nếu sản phẩm có nhiều câu hỏi sáng tạo hơn, em sẽ thử nghiệm
-trên tập đánh giá trước khi tăng giá trị này.
+Em sẽ bắt đầu với temperature khoảng 0.2–0.3 vì chatbot hỗ trợ khách hàng cần
+phản hồi ổn định, không thay đổi không cần thiết giữa các câu hỏi tương tự.
+Temperature thấp không tự đảm bảo câu trả lời đúng hay không bịa; phần này vẫn
+cần được kiểm soát bằng dữ liệu/ngữ cảnh và đánh giá. Nếu sản phẩm có nhiều
+câu hỏi sáng tạo hơn, em sẽ thử nghiệm trên tập đánh giá trước khi tăng giá trị này.
 
 ### Câu 1.3 — Đánh đổi chi phí
 Kịch bản: 10.000 người dùng hoạt động mỗi ngày, mỗi người gọi API 3 lần,
@@ -67,7 +69,8 @@ Chọn một đoạn văn tiếng Việt ~100 từ. So sánh số token theo `co
 nhiều token hơn tiếng Anh cùng độ dài?**
 Với đoạn tiếng Việt 107 từ em dùng, `count_tokens` theo encoding của gpt-4o
 cho 129 token, còn công thức `107 / 0.75` cho 142.67 token; công thức thô cao
-hơn thực tế 9.58%. Token là các mảnh subword chứ không phải từ; dấu tiếng Việt,
+hơn thực tế khoảng 10.6%, tính bằng `(142.67 - 129) / 129 × 100`. Đoạn văn gốc
+không còn trong các tệp hiện có, nên đây là số đo đã ghi lại. Token là các mảnh subword chứ không phải từ; dấu tiếng Việt,
 cách ghép âm tiết và độ phổ biến của từ ảnh hưởng đến cách tách token, nên số
 token có thể khác tiếng Anh cùng độ dài. Vì vậy `số từ / 0.75` chỉ nên dùng để
 ước lượng nhanh, không thay cho bộ mã hóa thật.
@@ -127,7 +130,7 @@ không làm số token input tăng tuyến tính theo toàn bộ lịch sử.
 
 ## Danh Sách Kiểm Tra Nộp Bài
 
-- [ ] `python grade.py` — xem điểm tự động, mục tiêu ≥ 75/100
-- [ ] Cả 4 checkpoint pytest đều pass
-- [ ] Tất cả 9 câu trong file này đã được trả lời
-- [ ] Đã copy bài làm vào folder `solution/`, push lên fork và dán link trên trang bài Lab ở VLearn trước 23:59 ngày 11/09/2026
+- [x] `python grade.py` — xem điểm tự động, mục tiêu ≥ 75/100
+- [x] Cả 4 checkpoint pytest đều pass
+- [x] Tất cả 9 câu trong file này đã được trả lời
+- [x] Đã copy bài làm vào folder `solution/`, push lên fork và dán link trên trang bài Lab ở VLearn trước 23:59 ngày 11/09/2026
